@@ -1,3 +1,4 @@
+using LegacyOrderService.ConnectionFactory;
 using LegacyOrderService.Data;
 using LegacyOrderService.Presentation;
 using LegacyOrderService.Services;
@@ -7,7 +8,16 @@ namespace LegacyOrderService.Extensions;
 
 public static class IoCBase
 {
-    public static IServiceCollection AddLegacyOrderRepository(this IServiceCollection services)
+    public static IServiceCollection AddLegacyOrderDbService(this IServiceCollection services)
+    {
+        services.AddSingleton<IDbConnectionFactory, SqlLiteConnectionFactory>();
+        services.AddTransient<DbHelper>();
+
+        return services;
+    }
+
+
+    public static IServiceCollection AddLegacyOrderRepositoriesService(this IServiceCollection services)
     {
         services.AddSingleton<IProductRepository, ProductRepository>();
 
@@ -27,11 +37,12 @@ public static class IoCBase
 
         return services;
     }
-    
+
     public static ServiceProvider Startup()
     {
         var services = new ServiceCollection();
-        services.AddLegacyOrderRepository();
+        services.AddLegacyOrderDbService();
+        services.AddLegacyOrderRepositoriesService();
         services.AddLegacyOrderService();
         services.AddTransient<OrderApplication>();
         var serviceProvider = services.BuildServiceProvider();

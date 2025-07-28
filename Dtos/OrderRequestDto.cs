@@ -12,6 +12,6 @@ public class OrderRequestDto
 
     public int Quantity;
     public double Price;
-    
-    public double TotalPrice => Quantity * Price;
+
+    public double TotalPrice => Math.Round(Quantity * Price, 2);
 }

@@ -2,21 +2,18 @@ using LegacyOrderService.Extensions;
 using LegacyOrderService.Presentation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LegacyOrderService
+namespace LegacyOrderService;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Starting Order Service...");
+        Console.WriteLine("Starting Order Service...");
 
-            var serviceProvider = IoCBase.Startup();
-            var app = serviceProvider.GetRequiredService<OrderApplication>();
-            app.RunOrderProcess();
+        var serviceProvider = IoCBase.Startup();
+        var app = serviceProvider.GetRequiredService<OrderApplication>();
+        app.RunOrderProcess();
 
-            Console.WriteLine("Terminating Order Service...");
-        }
-
-       
+        Console.WriteLine("Terminating Order Service...");
     }
 }
