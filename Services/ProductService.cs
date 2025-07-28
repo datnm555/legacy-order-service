@@ -13,10 +13,14 @@ public class ProductService : IProductService
         _productRepository = productRepository;
     }
 
-
-    public IList<string> GetProducts()
+    public void GetProducts()
     {
-        return _productRepository.GetProducts();
+        Console.WriteLine("Available products:");
+        var productNames = _productRepository.GetProducts();
+        foreach (var productName in productNames)
+        {
+            Console.WriteLine("- " + productName);
+        }
     }
 
     public double GetPrice(string productName)
@@ -30,5 +34,24 @@ public class ProductService : IProductService
         _simulatorRedisCache[productName] = price;
 
         return price;
+    }
+
+    public string InputProductName()
+    {
+        Console.WriteLine("Enter product name:");
+        var productName = Console.ReadLine();
+        if (productName != null) return productName;
+
+        Console.WriteLine("Product name cannot be null. Please try again.");
+        InputProductName();
+
+        return productName;
+    }
+
+    public int InputQuantity()
+    {
+        Console.WriteLine("Enter quantity:");
+        int quantity = Convert.ToInt32(Console.ReadLine());
+        return quantity;
     }
 }

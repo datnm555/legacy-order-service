@@ -27,4 +27,10 @@ public static class IoCBase
 
         return services;
     }
+    
+    public static void InjectLegacyOrderServices(this IServiceCollection services)
+    {
+        services.AddLegacyOrderRepository();
+        services.AddLegacyOrderService();
+    }
 }

@@ -2,7 +2,10 @@ namespace LegacyOrderService.Services;
 
 public interface IProductService
 {
-    IList<string> GetProducts();
+    void GetProducts();
     
     double GetPrice(string productName);
+
+    string InputProductName();
+    int InputQuantity();
 }

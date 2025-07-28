@@ -12,4 +12,6 @@ public class OrderRequestDto
 
     public int Quantity;
     public double Price;
+    
+    public double TotalPrice => Quantity * Price;
 }
