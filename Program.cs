@@ -1,5 +1,7 @@
 using LegacyOrderService.Models;
 using LegacyOrderService.Data;
+using LegacyOrderService.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LegacyOrderService
 {
@@ -7,13 +9,17 @@ namespace LegacyOrderService
     {
         static void Main(string[] args)
         {
+            var services = new ServiceCollection();
+            services.AddLegacyOrderService();
+            var serviceProvider = services.BuildServiceProvider();
+
             Console.WriteLine("Welcome to Order Processor!");
             Console.WriteLine("Enter customer name:");
             string name = Console.ReadLine();
 
             Console.WriteLine("Enter product name:");
             string product = Console.ReadLine();
-            var productRepo = new ProductRepository();
+            var productRepo = serviceProvider.GetRequiredService<IProductRepository>();
             double price = productRepo.GetPrice(product);
 
 
@@ -37,10 +43,9 @@ namespace LegacyOrderService
             Console.WriteLine("Total: $" + price);
 
             Console.WriteLine("Saving order to database...");
-            var repo = new OrderRepository();
+            var repo = serviceProvider.GetRequiredService<IOrderRepository>();
             repo.Save(order);
             Console.WriteLine("Done.");
         }
     }
 }
-
