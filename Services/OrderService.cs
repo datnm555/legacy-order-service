@@ -20,7 +20,7 @@ public class OrderService : IOrderService
             CustomerName = orderRequestDto.CustomerName,
             ProductName = orderRequestDto.ProductName,
             Quantity = orderRequestDto.Quantity,
-            Price = orderRequestDto.Price,
+            Price = orderRequestDto.Price
         };
 
         _orderRepository.Save(order);

@@ -1,16 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LegacyOrderService.Models
+namespace LegacyOrderService.Models;
+
+public class Order
 {
-    public class Order
-    {
-        [Required]
-        public string CustomerName;
+    [Required]
+    public string CustomerName;
 
-        [Required]
-        public string ProductName;
+    public double Price;
 
-        public int Quantity;
-        public double Price;
-    }
+    [Required]
+    public string ProductName;
+
+    public int Quantity;
 }

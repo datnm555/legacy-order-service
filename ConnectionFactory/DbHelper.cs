@@ -27,10 +27,7 @@ public class DbHelper
         using var command = connection.CreateCommand();
         command.CommandText = commandText;
 
-        foreach (var parameter in parameters)
-        {
-            command.Parameters.Add(parameter);
-        }
+        foreach (var parameter in parameters) command.Parameters.Add(parameter);
 
         command.ExecuteNonQuery();
     }

@@ -5,16 +5,17 @@ namespace LegacyOrderService.Presentation;
 public class OrderApplication
 {
     private readonly ICustomerService _customerService;
-    private readonly IProductService _productService;
     private readonly IOrderService _orderService;
-    
-    public OrderApplication(ICustomerService customerService, IProductService productService, IOrderService orderService)
+    private readonly IProductService _productService;
+
+    public OrderApplication(ICustomerService customerService, IProductService productService,
+        IOrderService orderService)
     {
         _customerService = customerService;
         _productService = productService;
         _orderService = orderService;
     }
-    
+
     public void RunOrderProcess()
     {
         Console.WriteLine("Welcome to Order Processor!");

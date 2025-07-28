@@ -17,18 +17,12 @@ public class ProductService : IProductService
     {
         Console.WriteLine("Available products:");
         var productNames = _productRepository.GetProducts();
-        foreach (var productName in productNames)
-        {
-            Console.WriteLine("- " + productName);
-        }
+        foreach (var productName in productNames) Console.WriteLine("- " + productName);
     }
 
     public double GetPrice(string productName)
     {
-        if (_simulatorRedisCache.TryGetValue(productName, out var cachedPrice))
-        {
-            return cachedPrice;
-        }
+        if (_simulatorRedisCache.TryGetValue(productName, out var cachedPrice)) return cachedPrice;
 
         var price = _productRepository.GetPrice(productName);
         _simulatorRedisCache[productName] = price;
@@ -38,20 +32,23 @@ public class ProductService : IProductService
 
     public string InputProductName()
     {
-        Console.WriteLine("Enter product name:");
-        var productName = Console.ReadLine();
-        if (productName != null) return productName;
-
-        Console.WriteLine("Product name cannot be null. Please try again.");
-        InputProductName();
-
-        return productName;
+        while (true)
+        {
+            Console.WriteLine("Enter product name:");
+            var productName = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(productName)) return productName;
+            Console.WriteLine("Product name cannot be null. Please try again.");
+        }
     }
 
     public int InputQuantity()
     {
-        Console.WriteLine("Enter quantity:");
-        int quantity = Convert.ToInt32(Console.ReadLine());
-        return quantity;
+        while (true)
+        {
+            Console.WriteLine("Enter quantity:");
+            var quantity = Convert.ToInt32(Console.ReadLine());
+            if (quantity > 0) return quantity;
+            Console.WriteLine("Quantity must be greater than zero. Please try again.");
+        }
     }
 }
