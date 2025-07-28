@@ -1,8 +1,5 @@
-using LegacyOrderService.Models;
-using LegacyOrderService.Data;
-using LegacyOrderService.Dtos;
 using LegacyOrderService.Extensions;
-using LegacyOrderService.Services;
+using LegacyOrderService.Presentation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LegacyOrderService
@@ -11,34 +8,15 @@ namespace LegacyOrderService
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to Order Processor!");
+            Console.WriteLine("Starting Order Service...");
 
-            var serviceProvider = Startup();
-            var customerService = serviceProvider.GetRequiredService<ICustomerService>();
-            var productService = serviceProvider.GetRequiredService<IProductService>();
-            var orderService = serviceProvider.GetRequiredService<IOrderService>();
+            var serviceProvider = IoCBase.Startup();
+            var app = serviceProvider.GetRequiredService<OrderApplication>();
+            app.RunOrderProcess();
 
-            var customerName = customerService.InputCustomerName();
-
-            productService.GetProducts();
-
-            var productName = productService.InputProductName();
-
-            var price = productService.GetPrice(productName);
-            var quantity = productService.InputQuantity();
-
-            orderService.AddOrder(customerName, productName, quantity, price);
-
-            Console.WriteLine("Done.");
+            Console.WriteLine("Terminating Order Service...");
         }
 
-        private static ServiceProvider Startup()
-        {
-            var services = new ServiceCollection();
-            services.AddLegacyOrderRepository();
-            services.AddLegacyOrderService();
-            var serviceProvider = services.BuildServiceProvider();
-            return serviceProvider;
-        }
+       
     }
 }
