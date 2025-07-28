@@ -1,6 +1,8 @@
 using LegacyOrderService.Models;
 using LegacyOrderService.Data;
+using LegacyOrderService.Dtos;
 using LegacyOrderService.Extensions;
+using LegacyOrderService.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LegacyOrderService
@@ -9,18 +11,23 @@ namespace LegacyOrderService
     {
         static void Main(string[] args)
         {
-            var services = new ServiceCollection();
-            services.AddLegacyOrderService();
-            var serviceProvider = services.BuildServiceProvider();
+            var serviceProvider = Startup();
 
             Console.WriteLine("Welcome to Order Processor!");
             Console.WriteLine("Enter customer name:");
             string name = Console.ReadLine();
 
+            // Simulating product retrieval
+            var productService = serviceProvider.GetRequiredService<IProductService>();
+            Console.WriteLine("Available products:");
+            foreach (var productName in productService.GetProducts())
+            {
+                Console.WriteLine("- " + productName);
+            }
+            
             Console.WriteLine("Enter product name:");
             string product = Console.ReadLine();
-            var productRepo = serviceProvider.GetRequiredService<IProductRepository>();
-            double price = productRepo.GetPrice(product);
+            double price = productService.GetPrice(product);
 
 
             Console.WriteLine("Enter quantity:");
@@ -28,24 +35,33 @@ namespace LegacyOrderService
 
             Console.WriteLine("Processing order...");
 
-            Order order = new Order();
-            order.CustomerName = name;
-            order.ProductName = product;
-            order.Quantity = qty;
-            order.Price = 10.0;
+            OrderRequestDto orderRequest = new OrderRequestDto();
+            orderRequest.CustomerName = name;
+            orderRequest.ProductName = product;
+            orderRequest.Quantity = qty;
+            orderRequest.Price = 10.0;
 
-            double total = order.Quantity * order.Price;
+            double total = orderRequest.Quantity * orderRequest.Price;
 
             Console.WriteLine("Order complete!");
-            Console.WriteLine("Customer: " + order.CustomerName);
-            Console.WriteLine("Product: " + order.ProductName);
-            Console.WriteLine("Quantity: " + order.Quantity);
+            Console.WriteLine("Customer: " + orderRequest.CustomerName);
+            Console.WriteLine("Product: " + orderRequest.ProductName);
+            Console.WriteLine("Quantity: " + orderRequest.Quantity);
             Console.WriteLine("Total: $" + price);
 
             Console.WriteLine("Saving order to database...");
-            var repo = serviceProvider.GetRequiredService<IOrderRepository>();
-            repo.Save(order);
+            var orderService = serviceProvider.GetRequiredService<IOrderService>();
+            orderService.Add(orderRequest);
             Console.WriteLine("Done.");
+        }
+
+        private static ServiceProvider Startup()
+        {
+            var services = new ServiceCollection();
+            services.AddLegacyOrderRepository();
+            services.AddLegacyOrderService();
+            var serviceProvider = services.BuildServiceProvider();
+            return serviceProvider;
         }
     }
 }
